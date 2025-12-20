@@ -1,24 +1,51 @@
 #!/bin/bash
 # Docker QuickENV entrypoint script
 
-# for plugin in "$DQE_ROOT"/plugins/[0-9]*.sh; do
-#   [ -f "$plugin" ] && echo "$plugin"
-# done
+enter_userspace(){
+    if [[ -z $@ ]]; then
+        echo "[INFO] You didn't use a script, entering shell!"
+        gosu $DQE_USER bash
+    else
+        gosu $DQE_USER $@
+    fi
+    return 0
+}
 
 echo "========================================"
 echo "Starting your environment, please wait..."
 echo "========================================"
 
+source /etc/os-release
+
 if [[ $EUID -ne 0 ]]; then
-    echo "Fatal Error: not running as root"
+    echo "[FATAL] not running as root"
     echo "Are you using docker's -user option?"
     echo "please use -e DQE_USER_UID=<your uid> and -e DQE_USER_GID=<your gid> instead"
     exit 1
 fi
 
-if [[ ! -d "/etc/docker-quickenv" ]]; then
-    echo "Fatal Error: data folder not found"
+if [[ ! -d $DQE_ROOT ]]; then
+    echo "[FATAL] data folder not found"
     echo "Please don't just copy this script to your image"
     echo "No? check you mountpoint settings"
     exit 1
 fi
+
+if [[ -e $DQE_ROOT/.finished ]]; then
+    echo "[INFO] Seems like everything is done before!"
+    enter_userspace
+    exit
+fi
+
+unset PRETTY_NAME NAME VERSION_ID VERSION VERSION_CODENAME DEBIAN_VERSION_FULL ID HOME_URL SUPPORT_URL BUG_REPORT_URL
+
+echo "[INFO] Loading system plugins..."
+bash $DQE_ROOT/sys-plugins/apt-mirror.sh
+bash $DQE_ROOT/sys-plugins/locale-and-tz.sh
+bash $DQE_ROOT/sys-plugins/regular-user.sh
+
+echo "source ${DQE_ROOT}/env.sh" >> /etc/profile
+echo "[INFO] Done! running you script using user ${DQE_USER} ..."
+touch $DQE_ROOT/.finished
+
+enter_userspace
