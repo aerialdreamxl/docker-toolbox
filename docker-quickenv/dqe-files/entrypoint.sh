@@ -2,11 +2,12 @@
 # Docker QuickENV entrypoint script
 
 enter_userspace(){
-    if [[ -z $@ ]]; then
+    echo "[INFO] Done! running you script using user ${DQE_USER} ..."
+    if [[ $# -eq 0 ]]; then
         echo "[INFO] You didn't use a script, entering shell!"
-        gosu $DQE_USER bash
+        gosu $DQE_USER bash -c "source ${DQE_ROOT}/env.sh && bash"
     else
-        gosu $DQE_USER $@
+        gosu $DQE_USER bash -c "source ${DQE_ROOT}/env.sh && $@"
     fi
     return 0
 }
@@ -33,19 +34,20 @@ fi
 
 if [[ -e $DQE_ROOT/.finished ]]; then
     echo "[INFO] Seems like everything is done before!"
-    enter_userspace
+    enter_userspace "$@"
     exit
 fi
 
 unset PRETTY_NAME NAME VERSION_ID VERSION VERSION_CODENAME DEBIAN_VERSION_FULL ID HOME_URL SUPPORT_URL BUG_REPORT_URL
+
+echo "source ${DQE_ROOT}/env.sh" >> /etc/skel/.profile
 
 echo "[INFO] Loading system plugins..."
 bash $DQE_ROOT/sys-plugins/apt-mirror.sh
 bash $DQE_ROOT/sys-plugins/locale-and-tz.sh
 bash $DQE_ROOT/sys-plugins/regular-user.sh
 
-echo "source ${DQE_ROOT}/env.sh" >> /etc/profile
-echo "[INFO] Done! running you script using user ${DQE_USER} ..."
+echo "source ${DQE_ROOT}/env.sh" > /etc/profile.d/docker_quickenv.sh
 touch $DQE_ROOT/.finished
 
-enter_userspace
+enter_userspace "$@"
