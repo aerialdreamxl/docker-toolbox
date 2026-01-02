@@ -12,7 +12,7 @@ DQE_SYS_LANG=en_US.UTF-8 \
 DQE_SYS_TZ=UTC \
 DQE_APT_MIRROR="http://deb.debian.org/debian" \
 DQE_APT_SECURE="http://security.debian.org/debian-security" \
-DQE_VARIENT=base \
+DQE_VARIANT=0 \
 TERM=xterm-256color
 
 ENTRYPOINT ["bash","/etc/docker-quickenv/entrypoint.sh"]

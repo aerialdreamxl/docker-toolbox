@@ -1,8 +1,7 @@
 #!/bin/bash
 # Docker QuickENV entrypoint script
 
-enter_userspace(){
-    echo "[INFO] Done! running you script using user ${DQE_USER} ..."
+cli_userspace(){
     if [[ $# -eq 0 ]]; then
         echo "[INFO] You didn't use a script, entering shell!"
         gosu $DQE_USER bash -c "source ${DQE_ROOT}/env.sh && bash"
@@ -10,6 +9,24 @@ enter_userspace(){
         gosu $DQE_USER bash -c "source ${DQE_ROOT}/env.sh && $@"
     fi
     return 0
+}
+
+enter_userspace(){
+    echo "[INFO] Loading per-startup daemons..."
+    bash $DQE_ROOT/sys-daemons/ssh.sh
+    echo "[INFO] Done! Prepareing you userspace..."
+    if [[ $DQE_SYSTEMD -eq 1 ]]; then
+        if [[ $DQE_VARIANT -ge 1 ]]; then
+            echo "[INFO] Systemd takeover activated!"
+            echo "[INFO] remember your password to login the system!"
+            exec /sbin/init
+        else
+            echo "[FATAL] This image varient didn't have systemd support, exiting..."
+            exit 1
+        fi
+    else
+        cli_userspace $@
+    fi
 }
 
 echo "========================================"
