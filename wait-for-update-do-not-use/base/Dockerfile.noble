@@ -1,0 +1,24 @@
+FROM ubuntu:noble
+COPY etc-toolbox /etc/toolbox
+ENV TOOLBOX_APT_MIRROR=http://archive.ubuntu.com/ubuntu/ \
+TOOLBOX_APT_SECURE=http://security.ubuntu.com/ubuntu/ \
+TOOLBOX_AUTOUPDATE=1 \
+TOOLBOX_USERNAME=user \
+TOOLBOX_UID_GID=1000 \
+TOOLBOX_ENABLE_ROOT=0 \
+TOOLBOX_IMAGE_CONTENT="Nothing(Base Image)" \
+TOOLBOX_SHELL_USER=user \
+TOOLBOX_USER_PRECONFIGURE=0 \
+TERM=xterm-256color
+RUN userdel ubuntu && \
+rm /etc/apt/sources.list && \
+rm -rf /etc/apt/sources.list.d/* && \
+echo "deb http://mirrors.tuna.tsinghua.edu.cn/ubuntu/ noble main restricted universe multiverse" >> /etc/apt/sources.list && \
+echo "deb http://mirrors.tuna.tsinghua.edu.cn/ubuntu/ noble-updates main restricted universe multiverse" >> /etc/apt/sources.list && \
+echo "deb http://mirrors.tuna.tsinghua.edu.cn/ubuntu/ noble-backports main restricted universe multiverse" >> /etc/apt/sources.list && \
+echo "deb http://mirrors.tuna.tsinghua.edu.cn/ubuntu/ noble-security main restricted universe multiverse" >> /etc/apt/sources.list && \
+apt update && apt upgrade -y && apt install -y sudo curl wget vim nano bash-completion gosu libgl1 && apt clean && rm -rf /var/lib/apt/lists/* && \
+rm /etc/apt/sources.list && \
+rm -rf /etc/apt/sources.list.d/*
+ENTRYPOINT ["/bin/bash","/etc/toolbox/entrypoint.sh"]
+CMD ["/bin/bash"]

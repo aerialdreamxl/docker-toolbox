@@ -1,0 +1,3 @@
+This image will act as a ready-to-build Docker system base image like ubuntu:noble
+Nothing here (if you didn't build ontop this image)
+good luck if you want a simple shell.
