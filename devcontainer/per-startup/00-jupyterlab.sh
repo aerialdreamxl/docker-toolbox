@@ -23,18 +23,3 @@ with open(config_file, 'w') as f:
     f.write(config_content)
 \""
 fi
-
-if [ ! -f /home/ubuntu/.config/code-server/config.yaml ]; then
-    echo "bind-addr: 0.0.0.0:8100" >> /home/ubuntu/.config/code-server/config.yaml
-    echo "auth: password" >> /home/ubuntu/.config/code-server/config.yaml
-    echo "password: ${DEVELOPER_PASSWORD}" >> /home/ubuntu/.config/code-server/config.yaml
-fi
-
-if [ ! -f /etc/ssh/ssh_host_ed25519_key ]; then
-    ssh-keygen -t ed25519 -f /etc/ssh/ssh_host_ed25519_key -N ""
-fi
-
-source ~/sys-env.sh
-source ~/workdir/usr-env.sh
-
-/usr/bin/supervisord -n -c /etc/supervisor/supervisord.conf
