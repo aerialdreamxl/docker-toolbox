@@ -12,7 +12,7 @@ ENV TERM=xterm-256color \
 #     echo "deb $APT_SECURE noble-security main restricted universe multiverse" >> /etc/apt/sources.list && \
 #     apt update && apt upgrade -y
 
-RUN apt install -y libgl1 sudo gosu curl wget nano vim git python3-venv xz-utils openssh-server supervisor && apt clean && rm -rf /var/lib/apt/lists/* && \
+RUN apt update && apt install -y libgl1 sudo gosu curl wget nano vim git python3-venv python3-pip xz-utils openssh-server supervisor && apt clean && rm -rf /var/lib/apt/lists/* && \
     mkdir -p /run/sshd && rm /etc/ssh/ssh_host_* && \
     echo "ubuntu:ubuntu" | chpasswd && mkdir -p /var/log/supervisor && \
     mkdir -p /etc/toolbox/scripts/run-once && mkdir -p /etc/toolbox/scripts/per-startup && mkdir -p /etc/toolbox/scripts/misc && mkdir -p /etc/toolbox/local/bin && touch /etc/toolbox/.env
@@ -25,5 +25,5 @@ COPY supervisord.conf /etc/supervisor/supervisord.conf
 COPY conf.d /etc/supervisor/conf.d
 COPY entrypoint.sh /etc/toolbox/entrypoint.sh
 COPY 00-openssh.sh /etc/toolbox/scripts/run-once/00-openssh.sh
-STOPSIGNAL SIGTERM
+STOPSIGNAL SIGINT
 CMD ["/bin/bash","/etc/toolbox/entrypoint.sh"]

@@ -1,0 +1,17 @@
+FROM aerialdreamxl/supervisord-toolbox:ubuntu
+
+ARG APT_MIRROR="http://mirrors.tuna.tsinghua.edu.cn/ubuntu/" \
+    APT_SECURE="http://mirrors.tuna.tsinghua.edu.cn/ubuntu/" \
+    NPM_MIRROR="https://registry.npmmirror.com" \
+    RELEASE="resolute"
+
+ENV UV_DEFAULT_INDEX="https://mirrors.tuna.tsinghua.edu.cn/pypi/web/simple"
+
+RUN /bin/bash -c "rm /etc/apt/sources.list && \
+    rm /etc/apt/sources.list.d/ubuntu.sources && \
+    source /etc/os-release && \
+    echo \"deb $APT_MIRROR $RELEASE main restricted universe multiverse\" >> /etc/apt/sources.list && \
+    echo \"deb $APT_MIRROR $RELEASE-updates main restricted universe multiverse\" >> /etc/apt/sources.list && \
+    echo \"deb $APT_MIRROR $RELEASE-backports main restricted universe multiverse\" >> /etc/apt/sources.list && \
+    echo \"deb $APT_SECURE $RELEASE-security main restricted universe multiverse\" >> /etc/apt/sources.list && \
+    npm config set registry $NPM_MIRROR && pip config set global.index-url $UV_DEFAULT_INDEX"
