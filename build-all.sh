@@ -7,8 +7,8 @@ docker build -t aerialdreamxl/supervisord-toolbox:ubuntu-cn -f Dockerfile.ubuntu
 docker build -t aerialdreamxl/supervisord-toolbox:debian-cn -f Dockerfile.debian .
 cd ..
 cd hermes
-docker build -t aerialdreamxl/hermes-toolbox .
+docker build -t aerialdreamxl/hermes-toolbox:ubuntu-cn .
 cd ..
 cd devcontainer
-docker build -t aerialdreamxl/dev-toolbox .
+docker build -t aerialdreamxl/dev-toolbox:ubuntu-cn .
 cd ..
