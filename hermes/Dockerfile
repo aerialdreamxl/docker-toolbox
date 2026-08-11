@@ -8,7 +8,7 @@ COPY --chown=ubuntu:ubuntu hermes-installer.sh /hermes-installer.sh
 #     gosu ubuntu:ubuntu /bin/bash -c "hermes doctor"
 #     #gosu ubuntu:ubuntu /bin/bash -c "bash /hermes-installer.sh --skip-setup && hermes doctor && cd /hermes-data && rm -rf *"
 
-RUN apt update && apt upgrade -y && apt install -y ripgrep ffmpeg && apt clean && rm -rf /var/lib/apt/lists/* && \
+RUN apt update && apt upgrade -y && apt install -y ripgrep ffmpeg make python-is-python3 gcc g++ && apt clean && rm -rf /var/lib/apt/lists/* && \
     mkdir /hermes-data && chown ubuntu:ubuntu /hermes-data && \
     gosu ubuntu:ubuntu /bin/bash -c "cat /hermes-installer.sh | bash -s -- --skip-setup" && \
     gosu ubuntu:ubuntu /bin/bash -c "hermes doctor"
