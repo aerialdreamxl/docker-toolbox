@@ -1,0 +1,24 @@
+FROM ubuntu:resolute
+ENV TERM=xterm-256color \
+    PATH=/home/ubuntu/.local/bin:/etc/toolbox/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin \
+    TOOLBOX_RUN_ONCE=1 \
+    TOOLBOX_RUN_PER_STARTUP=1
+
+RUN apt update && apt install -y libgl1 sudo gosu curl wget nano vim git python3-venv python3-pip xz-utils openssh-server supervisor libatomic1 && apt clean && rm -rf /var/lib/apt/lists/* && \
+    mkdir -p /run/sshd && rm /etc/ssh/ssh_host_* && \
+    echo "ubuntu:ubuntu" | chpasswd && mkdir -p /var/log/supervisor && \
+    mkdir -p /etc/toolbox/scripts/run-once && mkdir -p /etc/toolbox/scripts/per-startup && mkdir -p /etc/toolbox/scripts/misc && mkdir -p /etc/toolbox/local/bin && touch /etc/toolbox/.env
+RUN cd / && wget https://mirrors.aliyun.com/nodejs-release/v26.7.0/node-v26.7.0-linux-x64.tar.xz && \
+    tar xvf node-v26.7.0-linux-x64.tar.xz && cp -r node-v26.7.0-linux-x64/* /etc/toolbox/local && rm -rf node-v26.7.0-linux-x64 && rm node-v26.7.0-linux-x64.tar.xz && \
+    node -v && npm -v && \
+    echo "" >> /etc/profile && \
+    echo "export PATH=/home/ubuntu/.local/bin:/etc/toolbox/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin" >> /etc/profile && \
+    echo "source /etc/toolbox/.env" >> /etc/profile
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /etc/toolbox/local/bin
+COPY supervisord.conf /etc/supervisor/supervisord.conf
+COPY conf.d /etc/supervisor/conf.d
+COPY entrypoint.sh /etc/toolbox/entrypoint.sh
+COPY 00-openssh.sh /etc/toolbox/scripts/run-once/00-openssh.sh
+COPY .env /etc/toolbox/.env
+STOPSIGNAL SIGINT
+CMD ["/bin/bash","/etc/toolbox/entrypoint.sh"]

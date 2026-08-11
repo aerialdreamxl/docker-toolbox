@@ -1,10 +1,12 @@
+set -e
+
 cd supervisor
-docker build -t aerialdreamxl/supervisord-toolbox:ubuntu -f Dockerfile.ubuntu .
-docker build -t aerialdreamxl/supervisord-toolbox:debian -f Dockerfile.debian .
+docker build -t aerialdreamxl/supervisord-toolbox:ubuntu -f Dockerfile.resolute .
+docker build -t aerialdreamxl/supervisord-toolbox:debian -f Dockerfile.trixie .
 cd ..
 cd supervisor-cn
-docker build -t aerialdreamxl/supervisord-toolbox:ubuntu-cn -f Dockerfile.ubuntu .
-docker build -t aerialdreamxl/supervisord-toolbox:debian-cn -f Dockerfile.debian .
+docker build -t aerialdreamxl/supervisord-toolbox:ubuntu-cn -f Dockerfile.resolute .
+docker build -t aerialdreamxl/supervisord-toolbox:debian-cn -f Dockerfile.trixie .
 cd ..
 cd hermes
 docker build -t aerialdreamxl/hermes-toolbox:ubuntu-cn .
