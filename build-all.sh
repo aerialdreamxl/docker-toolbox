@@ -13,4 +13,5 @@ docker build -t aerialdreamxl/hermes-toolbox:ubuntu-cn .
 cd ..
 cd devcontainer
 docker build -t aerialdreamxl/dev-toolbox:ubuntu-cn .
+docker build -t aerialdreamxl/dev-toolbox:ubuntu-cn-rocwsl -f rocm-wsl.Dockerfile .
 cd ..
