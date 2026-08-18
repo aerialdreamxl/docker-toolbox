@@ -44,7 +44,7 @@ BOLD='\033[1m'
 
 # Configuration
 REPO_URL_SSH="git@https://ghfast.top/github.com:NousResearch/hermes-agent.git"
-REPO_URL_HTTPS="https://ghfast.top/https://github.com/NousResearch/hermes-agent.git"
+REPO_URL_HTTPS="https://gh-proxy.com/https://github.com/NousResearch/hermes-agent.git"
 HERMES_HOME="${HERMES_HOME:-$HOME/.hermes}"
 # INSTALL_DIR is resolved AFTER arg parsing and OS detection so we can pick an
 # FHS-style layout for root installs.  Track whether the user gave us an

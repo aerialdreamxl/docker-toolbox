@@ -10,6 +10,7 @@ VOLUME ["/hermes-data"]
 ENV HERMES_HOME=/hermes-data
 COPY 01-hermes-setup.sh /etc/toolbox/scripts/run-once/01-hermes-setup.sh
 COPY conf.d/hermes-dashboard.conf /etc/supervisor/conf.d/hermes-dashboard.conf
+COPY conf.d/hermes-dashboard-publish.conf.disabled /etc/supervisor/conf.d/hermes-dashboard-publish.conf.disabled
 COPY conf.d/hermes-gateway.conf /etc/supervisor/conf.d/hermes-gateway.conf
 COPY conf.d/hermes-dashboard-proxy.conf /etc/supervisor/conf.d/hermes-dashboard-proxy.conf
 #COPY hermes-nginx-conf /hermes-nginx-conf
